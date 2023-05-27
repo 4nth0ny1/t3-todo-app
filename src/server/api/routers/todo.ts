@@ -12,18 +12,7 @@ export const todoRouter = createTRPCRouter({
             ({id, content})
         }))
     
-        return [
-            {
-                id: 'fake',
-                content: 'fake text',
-             
-            }, 
-            {
-                id: 'fake2',
-                content: 'fake2 text',
-                
-            }
-        ]
+        return todos.map(({ id, content }) => ({ id, content }));
     }),
     create: protectedProcedure.input(todoInput).mutation(async ({ ctx, input }) => {
         return ctx.prisma.todo.create({

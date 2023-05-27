@@ -3,6 +3,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 // import { api } from "~/utils/api";
 import Todos from "../components/Todos";
+import CreateTodo from "../components/CreateTodo";
 
 const Home: NextPage = () => {
   return (
@@ -20,6 +21,7 @@ const Home: NextPage = () => {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8"></div>
           <div className="flex flex-col items-center gap-2">
             <AuthShowcase />
+            <CreateTodo />
             <Todos />
           </div>
         </div>
