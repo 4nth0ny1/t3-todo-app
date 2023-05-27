@@ -1,5 +1,6 @@
 import { protectedProcedure, createTRPCRouter } from "../trpc";
 import { todoInput } from "~/types"
+import { z } from 'zod'
 
 export const todoRouter = createTRPCRouter({
     all: protectedProcedure.query( async ({ctx}) => {
@@ -23,6 +24,13 @@ export const todoRouter = createTRPCRouter({
                         id: ctx.session.user.id
                     }
                 }
+            }
+        })
+    }),
+    delete: protectedProcedure.input(z.string()).mutation(({ctx, input}) => {
+        return ctx.prisma.todo.delete({
+            where: {
+                id: input
             }
         })
     })
