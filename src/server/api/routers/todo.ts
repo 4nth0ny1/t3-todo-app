@@ -3,17 +3,13 @@ import { todoInput } from "~/types"
 import { z } from 'zod'
 
 export const todoRouter = createTRPCRouter({
-    all: protectedProcedure.query( async ({ctx}) => {
+    all: protectedProcedure.query(async ({ ctx }) => {
         const todos = await ctx.prisma.todo.findMany({
-            where: {
-                userId: ctx.session.user.id,
-            }
-        })
-        console.log(todos.map(({id, content}) => {
-            ({id, content})
-        }))
-    
-        return todos.map(({ id, content }) => ({ id, content }));
+        where: {
+            userId: ctx.session.user.id,
+        },
+        });
+        return todos.map(({ id, content, done }) => ({ id, content, done }));
     }),
     create: protectedProcedure.input(todoInput).mutation(async ({ ctx, input }) => {
         return ctx.prisma.todo.create({
@@ -33,5 +29,23 @@ export const todoRouter = createTRPCRouter({
                 id: input
             }
         })
-    })
+    }),
+    toggle: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        done: z.boolean(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const { id, done } = input;
+      return ctx.prisma.todo.update({
+        where: {
+          id,
+        },
+        data: {
+          done,
+        },
+      });
+    }),
 })
